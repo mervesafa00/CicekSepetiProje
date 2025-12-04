@@ -2,9 +2,7 @@
           WEB TABANLI ÇİÇEK SEPETİ VERİTABANI PROJESİ
 
 
-          <img width="1057" height="670" alt="Ekran görüntüsü 2025-11-23 002402" src="https://github.com/user-attachments/assets/68e5f82c-bf76-428e-883f-42bc5d1c4dc6" />
-
-
+         
 
 PROJENİN KURULUM VE ÇALIŞTIRMA ADIMLARI
 

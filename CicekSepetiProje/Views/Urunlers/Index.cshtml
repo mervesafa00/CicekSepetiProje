@@ -1,0 +1,101 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.Urunler>
+
+@{
+    ViewData["Title"] = "Online Çiçek & Hediye";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Kategori Alanı */
+    .category-scroll {
+        display: flex; gap: 30px; overflow-x: auto; padding: 20px 0;
+        scrollbar-width: none;
+    }
+    .cat-item { text-align: center; min-width: 80px; cursor: pointer; transition: transform 0.2s; }
+    .cat-item:hover { transform: translateY(-3px); }
+    .cat-img {
+        width: 70px; height: 70px; /* Kategori resimleri de biraz küçüldü */
+        border-radius: 50%; object-fit: cover;
+        border: 2px solid #4caf50; padding: 2px;
+    }
+    .cat-text { font-size: 0.8rem; margin-top: 5px; font-weight: 600; color: #333; }
+
+    /* Ürün Kartı (Daha Küçük ve Zarif) */
+    .product-card {
+        border: 1px solid #f0f0f0; border-radius: 8px; background: white;
+        transition: all 0.2s ease; height: 100%; display: block;
+        text-decoration: none; color: inherit; position: relative;
+    }
+    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #eee; color: inherit; }
+
+    /* Resim Alanı (KÜÇÜLTÜLDÜ) */
+    .card-img-top {
+        width: 100%;
+        height: 220px; /* Orjinaline uygun boyut (Eskisi 350px idi) */
+        object-fit: cover; border-radius: 8px 8px 0 0;
+    }
+
+    /* Bilgiler */
+    .card-body { padding: 10px; }
+    
+    .prod-title {
+        font-size: 0.85rem; /* Yazı boyutu küçüldü */
+        color: #333; margin-bottom: 3px; font-weight: 400;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Yıldızlar */
+    .rating-area { color: #f5c518; font-size: 0.75rem; margin-bottom: 5px; display: flex; align-items: center; }
+    .review-count { color: #999; font-size: 0.7rem; margin-left: 4px; }
+
+    .prod-price { font-size: 1.1rem; font-weight: 700; color: #333; }
+    .delivery-info { font-size: 0.7rem; color: #4caf50; font-weight: 600; margin-bottom: 5px; }
+</style>
+
+<div class="container mt-3">
+    
+    <div class="category-scroll">
+        <div class="cat-item"><img src="~/img/ayicik_buket.jpg" class="cat-img"><div class="cat-text">Ayıcıklar</div></div>
+        <div class="cat-item"><img src="~/img/gul.jpg" class="cat-img"><div class="cat-text">Güller</div></div>
+        <div class="cat-item"><img src="~/img/kelebek.jpg" class="cat-img"><div class="cat-text">Trendler</div></div>
+        <div class="cat-item"><img src="~/img/kokina.jpg" class="cat-img"><div class="cat-text">Yılbaşı</div></div>
+        <div class="cat-item"><img src="~/img/kek.jpg" class="cat-img"><div class="cat-text">Yenilebilir</div></div>
+        <div class="cat-item"><img src="~/img/orkide.jpg" class="cat-img"><div class="cat-text">Orkideler</div></div>
+        <div class="cat-item"><img src="~/img/mevsim.jpg" class="cat-img"><div class="cat-text">Doğum Günü</div></div>
+        <div class="cat-item"><img src="~/img/lilyum.jpg" class="cat-img"><div class="cat-text">Yeni İş</div></div>
+        <div class="cat-item"><img src="~/img/papatya.jpg" class="cat-img"><div class="cat-text">Papatyalar</div></div>
+        <div class="cat-item"><img src="~/img/aynali.jpg" class="cat-img"><div class="cat-text">Kişiye Özel</div></div>
+    </div>
+
+    <h5 class="mt-4 mb-3" style="font-weight: 600; color: #444; font-size: 1.1rem;">Öne Çıkan Ürünler</h5>
+
+    <div class="row g-3"> @foreach (var item in Model)
+        {
+            <div class="col-6 col-md-3 mb-3">
+                <a asp-action="Details" asp-route-id="@item.UrunId" class="product-card">
+                    
+                    <div style="position:absolute; top:10px; right:10px; background:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(0,0,0,0.1); z-index:5;">
+                        <i class="fa-regular fa-heart" style="color:#b0b0b0; font-size:0.9rem;"></i>
+                    </div>
+
+                    <img src="@item.ResimUrl" class="card-img-top" alt="@item.UrunAdi">
+
+                    <div class="card-body">
+                        <div class="delivery-info"><i class="fa-solid fa-truck"></i> Ücretsiz Teslimat</div>
+                        <div class="prod-title">@item.UrunAdi</div>
+
+                        <div class="rating-area">
+                            @if (item.OrtalamaPuan > 4.5m) { <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> }
+                            else { <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star-half-stroke"></i> }
+                            <span class="review-count">(@(item.YorumSayisi > 0 ? item.YorumSayisi : 120))</span>
+                        </div>
+
+                        <div class="prod-price">
+                            @item.Fiyat <span style="font-size: 0.8rem;">TL</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

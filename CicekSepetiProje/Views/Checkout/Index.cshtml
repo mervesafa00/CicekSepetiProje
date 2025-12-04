@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Teslimat Bilgileri";
+    Layout = "_Layout";
+    var fiyat = TempData.Peek("Fiyat");
+}
+
+<style>
+    body { background-color: #fcfcfc; }
+
+    /* ÜST ADIM ÇUBUĞU */
+    .steps-container { display: flex; justify-content: center; margin: 30px 0; }
+    .step-item { text-align: center; position: relative; width: 120px; }
+    .step-circle { 
+        width: 40px; height: 40px; background: #ddd; color: white; 
+        border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+        margin: 0 auto 8px auto; font-weight: bold; font-size: 1.2rem;
+    }
+    /* Aktif Adım (Yeşil) */
+    .step-active .step-circle { background-color: #4caf50; box-shadow: 0 0 0 5px #e8f5e9; }
+    .step-text { font-size: 0.8rem; color: #999; font-weight: 600; }
+    .step-active .step-text { color: #333; }
+    
+    /* Ara Çizgi */
+    .step-line { flex-grow: 1; height: 3px; background: #eee; margin-top: 20px; max-width: 60px; }
+
+    /* SOL FORM ALANI */
+    .form-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 30px; }
+    .form-control, .form-select { height: 50px; border-radius: 6px; font-size: 0.95rem; border-color: #ddd; }
+    .form-control:focus, .form-select:focus { border-color: #4caf50; box-shadow: none; }
+    .input-icon { position: absolute; left: 15px; top: 15px; color: #4caf50; font-size: 1.2rem; }
+    .input-with-icon { padding-left: 45px; }
+
+    /* SAĞ ÖZET ALANI */
+    .summary-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; }
+    .summary-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .btn-next { 
+        background-color: #4caf50; color: white; font-weight: bold; width: 100%; 
+        padding: 12px; border-radius: 6px; border: none; font-size: 1.1rem;
+        transition: 0.2s;
+    }
+    .btn-next:hover { background-color: #43a047; }
+    
+    /* Turuncu Uyarı Kutusu */
+    .warning-box { background-color: #e67e22; color: white; font-size: 0.8rem; padding: 10px; border-radius: 5px; margin-bottom: 15px; position: relative; }
+    .warning-close { position: absolute; right: 10px; top: 8px; cursor: pointer; }
+</style>
+
+<div class="container">
+    
+    <div class="steps-container">
+        <div class="step-item step-active">
+            <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+            <div class="step-text">Sipariş Bilgileri</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+            <div class="step-circle" style="background-color:#e0e0e0; color:#fff;">2</div>
+            <div class="step-text">Ödeme</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+            <div class="step-circle" style="background-color:#e0e0e0; color:#fff;">3</div>
+            <div class="step-text">Mesaj Kartı</div>
+        </div>
+    </div>
+
+    <form asp-action="OdemeEkraninaGit" method="post">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-card mb-4">
+                    
+                    <div class="mb-3 position-relative">
+                        <i class="fa-regular fa-heart input-icon"></i>
+                        <input type="text" name="AliciAd" class="form-control input-with-icon" placeholder="Alıcının Adı Soyadı" required>
+                    </div>
+                    
+                    <div class="mb-3 position-relative">
+                        <i class="fa-solid fa-mobile-screen input-icon"></i>
+                        <input type="text" name="Telefon" class="form-control input-with-icon" placeholder="Alıcının Telefon Numarası" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <select name="Sehir" class="form-select">
+                                <option>ERZURUM</option>
+                                <option>İSTANBUL</option>
+                                <option>ANKARA</option>
+                                <option>İZMİR</option>
+                                <option>BATMAN</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select name="Ilce" class="form-select">
+                                <option>Yakutiye</option>
+                                <option>Merkez</option>
+                                <option>Kadıköy</option>
+                                <option>Çankaya</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <select name="Mahalle" class="form-select">
+                            <option>Pınarbaşı Mahallesi</option>
+                            <option>Kültür Mahallesi</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                        <i class="fa-solid fa-location-dot input-icon" style="top: 20px;"></i>
+                        <textarea name="AcikAdres" class="form-control input-with-icon" rows="3" 
+                            placeholder="Siparişinizin zamanında teslim edilebilmesi için, lütfen adresinizi il, ilçe, mahalle, cadde, kapı no detaylarıyla yazınız." required></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                
+                <div class="warning-box">
+                    Mesaj kartınızı ödeme adımından sonra ekleyeceksiniz.
+                    <i class="fa-solid fa-xmark warning-close"></i>
+                </div>
+
+                <button type="submit" class="btn-next mb-3">
+                    İleri <i class="fa-solid fa-chevron-right ms-1"></i>
+                </button>
+
+                <div class="summary-card">
+                    <h6 class="summary-title text-center">Sipariş Özeti</h6>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Ara Toplam (1 Ürün)</span>
+                        <span class="fw-bold">@fiyat TL</span>
+                    </div>
+
+                    <div class="input-group mb-3 mt-3">
+                        <input type="text" class="form-control" placeholder="Kodu Girin" style="height:40px;">
+                        <button class="btn btn-warning text-white fw-bold" type="button" style="background-color:#e67e22; border:none; height:40px;">Kullan</button>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5">Toplam:</span>
+                        <span class="fw-bold fs-4 text-dark">@fiyat TL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

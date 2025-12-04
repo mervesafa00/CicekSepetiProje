@@ -1,0 +1,34 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.SilinenUrunLog>
+@{
+    ViewData["Title"] = "Silinen Ürün Logları";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fa-solid fa-history text-danger"></i> Silinen Ürün Kayıtları</h3>
+    <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="alert alert-danger bg-opacity-10 text-danger border-danger">
+    <i class="fa-solid fa-bolt"></i> Bu liste <strong>SQL Trigger</strong> tarafından otomatik doldurulmaktadır.
+</div>
+
+<table class="table table-striped bg-white shadow-sm">
+    <thead class="bg-danger text-white">
+        <tr>
+            <th>Log ID</th>
+            <th>Silinen Ürün Adı</th>
+            <th>Silinme Tarihi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LogId</td>
+                <td class="fw-bold">@item.UrunAdi</td>
+                <td>@item.SilinmeTarihi</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ÇiçekSepeti</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff; }
+        
+        /* ÜST MENÜ GENEL AYARLAR */
+        .navbar { 
+            background-color: white; 
+            padding: 10px 0; 
+            border-bottom: 1px solid #e6e6e6; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        /* ARAMA ÇUBUĞU */
+        .search-container { position: relative; width: 100%; max-width: 580px; }
+        .search-input { 
+            border-radius: 50px 0 0 50px; 
+            border: 2px solid #4caf50; 
+            border-right: none; 
+            padding-left: 20px;
+            height: 42px; 
+            font-size: 0.9rem;
+        }
+        .search-input:focus { box-shadow: none; border-color: #4caf50; }
+        .search-btn { 
+            border-radius: 0 50px 50px 0; 
+            background-color: #4caf50; 
+            color: white; 
+            border: 2px solid #4caf50; 
+            width: 50px; 
+            height: 42px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .search-btn:hover { background-color: #43a047; color: white; }
+
+        /* SAĞ MENÜ */
+        .navbar-nav { gap: 15px; align-items: center; }
+        .nav-icon-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex; align-items: center; gap: 6px;
+            font-weight: 600; transition: color 0.2s;
+        }
+        .nav-icon-link i { font-size: 1.1rem; color: #333; }
+        .nav-icon-link:hover { color: #4caf50; }
+        .nav-icon-link:hover i { color: #4caf50; }
+
+        /* YEŞİL SEPET BUTONU */
+        .btn-basket {
+            background-color: #4caf50;
+            color: white !important;
+            padding: 6px 15px; 
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex; align-items: center; gap: 5px;
+            transition: background-color 0.2s;
+        }
+        .btn-basket:hover { background-color: #43a047; }
+        .btn-basket i { color: white; font-size: 1rem; }
+
+        /* Footer */
+        .footer { background-color: #fcfcfc; padding: 20px 0; border-top: 1px solid #eee; font-size: 0.8rem; margin-top: auto; }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top">
+            <div class="container">
+                
+                <a class="navbar-brand me-4" asp-controller="Urunlers" asp-action="Index" style="padding:0;">
+                    <img src="~/img/logo.png" height="36" alt="ÇiçekSepeti" style="margin-top:-2px;" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+                    
+                    <form asp-controller="Urunlers" asp-action="Index" method="get" class="search-container mx-auto my-2 my-lg-0">
+                        <div class="input-group">
+                            <input type="text" name="aramaKelimesi" class="form-control search-input" placeholder="Marka, ürün veya kategori ara">
+                            <button class="btn search-btn" type="submit">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav flex-row justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-icon-link" href="#">
+                                <i class="fa-regular fa-heart"></i> <span class="d-none d-lg-inline">Favorilerim</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-icon-link" asp-controller="Siparislerim" asp-action="Index">
+                                <i class="fa-solid fa-truck"></i> <span class="d-none d-lg-inline">Siparişlerim</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fa-regular fa-user"></i> <span class="d-none d-lg-inline">Hesabım</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="font-size: 0.9rem;">
+                                <li><a class="dropdown-item" href="#">Profilim</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                          
+                            </ul>
+                        </li>
+
+                        <li class="nav-item ms-2">
+                            <a class="nav-link btn-basket" asp-controller="Checkout" asp-action="Sepetim">
+                              <i class="fa-solid fa-cart-shopping"></i> Sepetim
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container flex-grow-1">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted text-center">
+        <div class="container">
+            &copy; 2025 - ÇiçekSepeti
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

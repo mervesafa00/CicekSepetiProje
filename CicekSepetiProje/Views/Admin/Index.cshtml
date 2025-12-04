@@ -1,0 +1,80 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.Siparisler>
+
+@{
+   
+    ViewData["Title"] = "Firma Yönetim Paneli";
+    Layout = "_AdminLayout"; 
+
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4"><i class="fa-solid fa-store"></i> Firma Sipariş Yönetimi</h2>
+
+    <table class="table table-bordered table-hover bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>Sipariş No</th>
+                <th>Ürün</th>
+                <th>Tutar</th>
+                <th>Teslimat Zamanı</th>
+                <th>Müşteri Notu</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.SiparisId</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if(item.Urun != null) 
+                            {
+                                <img src="@item.Urun.ResimUrl" width="50" height="50" style="object-fit:cover; border-radius:5px; margin-right:10px;">
+                                <span>@item.Urun.UrunAdi</span>
+                            }
+                            else
+                            {
+                                <span>Ürün Silinmiş</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="fw-bold">@item.ToplamTutar TL</td>
+                    <td>
+                        <div><i class="fa-regular fa-calendar"></i> @item.TeslimTarihi</div>
+                        <div class="text-muted small"><i class="fa-regular fa-clock"></i> @item.TeslimSaati</div>
+                    </td>
+                    <td class="text-muted small" style="max-width:200px;">@item.SiparisNotu</td>
+                    <td>
+                        @if (item.Durum == "Onay Bekliyor") { <span class="badge bg-warning text-dark">Onay Bekliyor</span> }
+                        else if (item.Durum == "Hazırlanıyor") { <span class="badge bg-info">Hazırlanıyor</span> }
+                        else if (item.Durum == "Yola Çıktı") { <span class="badge bg-primary">Yola Çıktı</span> }
+                        else if (item.Durum == "Teslim Edildi") { <span class="badge bg-success">Teslim Edildi</span> }
+                        else { <span class="badge bg-secondary">@item.Durum</span> }
+                    </td>
+                    <td>
+                        <form asp-action="DurumDegistir" method="post" class="d-flex gap-1">
+                            <input type="hidden" name="siparisId" value="@item.SiparisId" />
+                            
+                            <button type="submit" name="yeniDurum" value="Hazırlanıyor" class="btn btn-sm btn-outline-info" title="Hazırla">
+                                <i class="fa-solid fa-box-open"></i>
+                            </button>
+                            <button type="submit" name="yeniDurum" value="Yola Çıktı" class="btn btn-sm btn-outline-primary" title="Kuryeye Ver">
+                                <i class="fa-solid fa-motorcycle"></i>
+                            </button>
+                            <button type="submit" name="yeniDurum" value="Teslim Edildi" class="btn btn-sm btn-outline-success" title="Teslim Et">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">Henüz hiç sipariş yok.</div>
+    }
+</div>

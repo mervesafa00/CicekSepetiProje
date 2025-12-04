@@ -1,0 +1,111 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.Siparisler>
+@{
+    ViewData["Title"] = "Sipariş Takibi";
+    Layout = "_Layout";
+}
+
+<style>
+    body { background-color: #f4f6f9; }
+    
+    /* Kart Tasarımı */
+    .order-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+    .order-header { background-color: #fafafa; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; }
+    .order-body { padding: 20px; display: flex; gap: 20px; align-items: center; }
+    .order-img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid #eee; }
+    
+    /* İLERLEME ÇUBUĞU (STEPPER) */
+    .stepper-wrapper { display: flex; justify-content: space-between; margin-top: 20px; position: relative; }
+    .stepper-wrapper::before { content: ""; position: absolute; top: 15px; left: 10%; right: 10%; height: 3px; background: #e0e0e0; z-index: 1; }
+    
+    .stepper-item { position: relative; z-index: 2; text-align: center; flex: 1; }
+    .step-counter { 
+        width: 30px; height: 30px; background: #fff; border: 3px solid #e0e0e0; 
+        border-radius: 50%; margin: 0 auto 10px auto; display: flex; 
+        align-items: center; justify-content: center; font-weight: bold; color: #ccc;
+    }
+    .step-name { font-size: 0.75rem; color: #999; font-weight: 600; }
+
+    /* Tamamlanan Adım (Yeşil) */
+    .stepper-item.completed .step-counter { background-color: #4caf50; border-color: #4caf50; color: white; }
+    .stepper-item.completed .step-name { color: #4caf50; }
+    .stepper-item.completed::after { content: ""; position: absolute; top: 15px; left: -50%; width: 100%; height: 3px; background: #4caf50; z-index: -1; }
+    .stepper-item:first-child::after { content: none; }
+</style>
+
+<div class="container mt-4">
+    <h4 class="fw-bold mb-4" style="color:#333;">Siparişlerim</h4>
+
+    @if (Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            
+                int step = 1; 
+                if (item.Durum == "Hazırlanıyor") { step = 2; }
+                else if (item.Durum == "Yola Çıktı") { step = 3; }
+                else if (item.Durum == "Teslim Edildi") { step = 4; }
+            
+
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <span class="fw-bold text-dark">Sipariş Tarihi:</span> @item.Tarih <br>
+                        <span class="fw-bold text-dark">Alıcı:</span> @item.SiparisNotu?.Split('-')[0]
+                    </div>
+                    <div class="text-end">
+                        <span class="fw-bold text-dark">Sipariş No:</span> #@item.SiparisId <br>
+                        <span class="text-success fw-bold">@item.ToplamTutar TL</span>
+                    </div>
+                </div>
+
+                <div class="order-body flex-column flex-md-row align-items-start">
+                    <div class="d-flex align-items-center mb-3 mb-md-0" style="min-width: 250px;">
+                        <img src="@item.Urun?.ResimUrl" class="order-img">
+                        <div class="ms-3">
+                            <h6 class="mb-1 fw-bold text-dark">@item.Urun?.UrunAdi</h6>
+                            <span class="badge bg-light text-dark border">@item.TeslimTarihi, @item.TeslimSaati</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 w-100 px-lg-5">
+                        <div class="stepper-wrapper">
+                            <div class="stepper-item @(step >= 1 ? "completed" : "")">
+                                <div class="step-counter"><i class="fa-solid fa-check"></i></div>
+                                <div class="step-name">Sipariş Alındı</div>
+                            </div>
+                            <div class="stepper-item @(step >= 2 ? "completed" : "")">
+                                <div class="step-counter"><i class="fa-solid fa-gift"></i></div>
+                                <div class="step-name">Hazırlanıyor</div>
+                            </div>
+                            <div class="stepper-item @(step >= 3 ? "completed" : "")">
+                                <div class="step-counter"><i class="fa-solid fa-motorcycle"></i></div>
+                                <div class="step-name">Yola Çıktı</div>
+                            </div>
+                            <div class="stepper-item @(step >= 4 ? "completed" : "")">
+                                <div class="step-counter"><i class="fa-solid fa-face-smile"></i></div>
+                                <div class="step-name">Teslim Edildi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                @if(step == 2) 
+                {
+                    <div class="bg-light p-2 text-center border-top">
+                        <button class="btn btn-sm btn-outline-success fw-bold">
+                            <i class="fa-solid fa-camera"></i> Hazırlanan Sipariş Görselini Gör
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <i class="fa-solid fa-basket-shopping fa-4x text-muted mb-3"></i>
+            <h5 class="text-muted">Henüz bir siparişiniz yok.</h5>
+            <a href="/Urunlers" class="btn btn-success mt-3">Alışverişe Başla</a>
+        </div>
+    }
+</div>

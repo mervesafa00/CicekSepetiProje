@@ -1,0 +1,63 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.Siparisler>
+@{
+    ViewData["Title"] = "Kurye Ekranı";
+    Layout =  "_KuryeLayout";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-primary d-flex align-items-center shadow-sm">
+        <i class="fa-solid fa-motorcycle fa-2x me-3"></i>
+        <div>
+            <h4 class="mb-0 fw-bold">Kurye Teslimat Ekranı</h4>
+            <small>Sadece "Yola Çıktı" durumundaki paketler burada görünür.</small>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom d-flex justify-content-between">
+                        <span class="fw-bold">Sipariş #@item.SiparisId</span>
+                        <span class="badge bg-primary">Dağıtımda</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@item.Uye?.Ad @item.Uye?.Soyad</h5>
+                        <p class="card-text text-muted small mb-2">
+                            <i class="fa-solid fa-location-dot text-danger"></i> @item.Uye?.Adres
+                        </p>
+                        <p class="card-text small bg-light p-2 rounded">
+                            <strong>Not:</strong> @item.SiparisNotu
+                        </p>
+                        
+                        <div class="d-flex align-items-center mt-3">
+                            <img src="@item.Urun?.ResimUrl" width="50" height="50" class="rounded me-3 border">
+                            <div>
+                                <div class="fw-bold small">@item.Urun?.UrunAdi</div>
+                                <div class="text-success fw-bold">@item.ToplamTutar TL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <form asp-action="TeslimEt" method="post">
+                            <input type="hidden" name="id" value="@item.SiparisId" />
+                            <button type="submit" class="btn btn-success w-100 fw-bold py-2">
+                                <i class="fa-solid fa-check-double"></i> TESLİM ET
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center mt-5 text-muted">
+            <i class="fa-solid fa-box-open fa-4x mb-3 text-secondary"></i>
+            <h5>Şu an dağıtımda paket yok.</h5>
+           
+        </div>
+    }
+</div>

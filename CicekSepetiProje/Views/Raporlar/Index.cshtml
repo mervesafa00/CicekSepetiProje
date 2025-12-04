@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Raporlar";
+    Layout = "_AdminLayout"; /* Yönetici Paneli Tasarımı */
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark"><i class="fa-solid fa-chart-pie text-primary"></i> Sistem Raporları</h2>
+        <p class="text-muted">Veritabanı nesnelerinin (View, Trigger) çalıştığını buradan kontrol edebilirsiniz.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        
+        <div class="col-md-5 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-5">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-list-check fa-4x text-info"></i>
+                    </div>
+                    <h4 class="card-title fw-bold">Sipariş Raporu (View)</h4>
+                    <p class="card-text text-muted">
+                        SQL'deki <code>vw_SiparisDetaylari</code> View'ını kullanarak siparişleri, müşteri ve ürün bilgileriyle birleştirip listeler.
+                    </p>
+                    <a asp-action="SiparisRaporu" class="btn btn-info text-white fw-bold px-4 mt-3">Raporu Görüntüle</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-5">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-trash-can-arrow-up fa-4x text-danger"></i>
+                    </div>
+                    <h4 class="card-title fw-bold">Silinen Ürünler (Trigger)</h4>
+                    <p class="card-text text-muted">
+                        SQL'deki <code>trg_UrunSilmeYedek</code> Trigger'ı sayesinde silinen ürünlerin yedeği buraya otomatik kaydedilir.
+                    </p>
+                    <a asp-action="SilinenUrunler" class="btn btn-danger text-white fw-bold px-4 mt-3">Logları Görüntüle</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

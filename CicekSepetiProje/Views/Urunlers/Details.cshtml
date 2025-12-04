@@ -1,0 +1,214 @@
+﻿@model CicekSepetiProje.Models.Urunler
+
+@{
+    ViewData["Title"] = Model.UrunAdi;
+    Layout = "_Layout";
+}
+
+<style>
+    /* GENEL STİLLER */
+    .main-img-wrap { border: 1px solid #f0f0f0; border-radius: 8px; padding: 20px; text-align: center; background: #fff; }
+    .main-img { max-width: 100%; height: 450px; object-fit: contain; }
+    
+    /* ADRES VE TARİH KUTULARI */
+    .address-wrapper { border: 1px solid #ccc; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 10px; background: #fff; transition: 0.3s; }
+    .address-input { border: none; width: 100%; outline: none; font-size: 1rem; }
+    
+    /* Onaylanmış Yeşil Kutu */
+    .address-confirmed { background-color: #4caf50; border-color: #4caf50; color: white; }
+    .address-confirmed input { color: white; background: transparent; }
+    .address-confirmed input::placeholder { color: #e6e6e6; }
+    .address-confirmed i { color: white !important; }
+
+    /* Tarih Kartları (Seçilebilir) */
+    .date-card { border: 1px solid #ddd; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; background: #fff; height: 100%; transition: 0.2s; }
+    .date-radio:checked + .date-card { border-color: #4caf50; background-color: #f0f9eb; font-weight: bold; color: #4caf50; }
+    .date-radio { display: none; }
+
+    /* BUTONLAR */
+    .btn-siparis { width: 100%; background-color: #4caf50; color: white; font-size: 1.2rem; font-weight: 600; padding: 12px; border-radius: 6px; border: none; transition: 0.2s; }
+    .btn-siparis:hover { background-color: #43a047; }
+    .btn-fav { width: 50px; border: 1px solid #ddd; border-radius: 6px; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #d85342; cursor: pointer; }
+
+    /* GÖRSEL ONAY KUTUSU (Senin Sevdiğin Tasarım) */
+    .visual-approve { background-color: #e8f5e9; padding: 15px; border-radius: 6px; font-size: 0.85rem; color: #333; line-height: 1.4; margin-top: 20px; border-left: 4px solid #4caf50; }
+
+    /* ÖDEME ALANI */
+    .payment-section { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+    .bank-logo { height: 30px; margin-right: 10px; border: 1px solid #eee; border-radius: 4px; }
+
+    /* YORUM VE YILDIZLAR */
+    .star-rating i { cursor: pointer; color: #ddd; transition: 0.2s; }
+    .star-rating i.active { color: #f5c518; }
+    .comment-card { background-color: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="main-img-wrap"><img src="@Model.ResimUrl" class="main-img"></div>
+        </div>
+
+        <div class="col-md-6">
+            <h1 style="font-weight:600; color:#333;">@Model.UrunAdi</h1>
+            
+            <div class="mb-3 text-warning">
+                 @if(Model.OrtalamaPuan > 4) { <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> }
+                 else { <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> }
+                 <a href="#yorumAlani" class="text-muted ms-2 small text-decoration-underline">(@Model.YorumSayisi Değerlendirme)</a>
+            </div>
+
+            <h2 class="fw-bold mb-4 text-dark">@Model.Fiyat TL</h2>
+
+            <form action="/Account/Login" method="get">
+                <input type="hidden" name="UrunId" value="@Model.UrunId" />
+                <input type="hidden" name="Fiyat" value="@Model.Fiyat" />
+
+                <div class="address-wrapper mb-3" id="addrBox">
+                    <i class="fa-solid fa-location-dot text-success fa-lg" id="addrIcon"></i>
+                    <input type="text" name="adres" id="adresInput" class="address-input" placeholder="Göndereceğiniz Adresi Yazın (Mahalle, Sokak)..." required>
+                    <i class="fa-solid fa-circle-check fa-xl text-success" style="cursor:pointer;" onclick="adresOnayla()" title="Onayla ve Devam Et"></i>
+                </div>
+
+                <div id="dateSection" style="display:none;">
+                    <label class="fw-bold mb-2 small text-muted">Teslimat Zamanı:</label>
+                    <div class="row g-2 mb-3">
+                        <div class="col-4">
+                            <label class="w-100">
+                                <input type="radio" name="tarih" value="Bugün" class="date-radio" checked>
+                                <div class="date-card"><div class="fw-bold">Bugün</div><div class="small text-muted">Teslimat</div></div>
+                            </label>
+                        </div>
+                        <div class="col-4">
+                            <label class="w-100">
+                                <input type="radio" name="tarih" value="Yarın" class="date-radio">
+                                <div class="date-card"><div class="fw-bold">Yarın</div><div class="small text-muted">Teslimat</div></div>
+                            </label>
+                        </div>
+                        <div class="col-4">
+                            <div class="date-card bg-light text-muted"><i class="fa-regular fa-calendar"></i> Takvim</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                         <select name="saat" class="form-select border-success fw-bold">
+                            <option>09:00 - 12:00</option>
+                            <option>12:00 - 15:00</option>
+                            <option>15:00 - 18:00</option>
+                            <option>18:00 - 22:00</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-siparis">Sipariş Ver</button>
+                    <div class="btn-fav"><i class="fa-regular fa-heart"></i></div>
+                </div>
+            </form>
+            
+            <div class="visual-approve">
+                <i class="fa-solid fa-camera me-2"></i><strong>Görsel Onayı!</strong><br>
+                Siparişiniz yola çıkmadan önce hazırlanan çiçeğin fotoğrafını görür ve onaylarsınız. Sürprizle karşılaşmazsınız.
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-section">
+        <h6 class="fw-bold">Ödeme Seçenekleri</h6>
+        <div class="d-flex align-items-center mt-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" class="bank-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="bank-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="bank-logo">
+            <span class="small text-muted ms-2"><i class="fa-solid fa-lock"></i> Güvenli Ödeme Altyapısı</span>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row" id="yorumAlani">
+        <div class="col-md-8">
+            <h4 class="fw-bold mb-4">Değerlendirmeler (@Model.Yorumlars.Count)</h4>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body bg-light">
+                    <h6 class="fw-bold">Yorum Yap</h6>
+                    <form asp-action="YorumYap" method="post">
+                        <input type="hidden" name="UrunId" value="@Model.UrunId" />
+                        <input type="hidden" name="Puan" id="secilenPuan" value="5" />
+
+                        <div class="mb-2 star-rating">
+                            <i class="fa-solid fa-star fa-lg active" onclick="puanVer(1)" id="s1"></i>
+                            <i class="fa-solid fa-star fa-lg active" onclick="puanVer(2)" id="s2"></i>
+                            <i class="fa-solid fa-star fa-lg active" onclick="puanVer(3)" id="s3"></i>
+                            <i class="fa-solid fa-star fa-lg active" onclick="puanVer(4)" id="s4"></i>
+                            <i class="fa-solid fa-star fa-lg active" onclick="puanVer(5)" id="s5"></i>
+                            <span class="ms-2 small fw-bold text-muted" id="puanText">5 Yıldız</span>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <input type="text" name="AdSoyad" class="form-control form-control-sm" placeholder="Adınız Soyadınız" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="Yorum" class="form-control form-control-sm" placeholder="Yorumunuz..." required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-dark btn-sm w-100">Gönder</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model.Yorumlars != null && Model.Yorumlars.Any())
+            {
+                @foreach (var y in Model.Yorumlars.OrderByDescending(x => x.Tarih))
+                {
+                    <div class="comment-card">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold text-dark">@y.AdSoyad</span>
+                            <div class="text-warning small">
+                                @for(int k=0; k<y.Puan; k++){ <i class="fa-solid fa-star"></i> }
+                            </div>
+                        </div>
+                        <p class="mb-0 mt-1 text-secondary small">@y.Yorum</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Henüz yorum yok.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ADRES ONAYLAMA (Yeşil Kutu ve Tarih Açma)
+        function adresOnayla() {
+            var val = document.getElementById("adresInput").value;
+            if (val.length > 3) {
+                // Kutuyu Yeşil Yap
+                document.getElementById("addrBox").classList.add("address-confirmed");
+                // İkonları Beyaz Yap
+                document.getElementById("addrIcon").classList.remove("text-success");
+                document.getElementById("addrIcon").classList.add("text-white");
+                // Tarih Bölümünü Aç
+                document.getElementById("dateSection").style.display = "block";
+            } else {
+                alert("Lütfen geçerli bir adres giriniz.");
+            }
+        }
+
+        // YILDIZ PUANLAMA
+        function puanVer(n) {
+            document.getElementById("secilenPuan").value = n;
+            document.getElementById("puanText").innerText = n + " Yıldız";
+            for (let i = 1; i <= 5; i++) {
+                let el = document.getElementById("s" + i);
+                if (i <= n) el.classList.add("active");
+                else el.classList.remove("active");
+            }
+        }
+    </script>
+}

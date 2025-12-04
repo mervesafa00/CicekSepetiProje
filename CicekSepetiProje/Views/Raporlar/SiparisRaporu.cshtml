@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CicekSepetiProje.Models.VwSiparisDetaylari>
+@{
+    ViewData["Title"] = "Sipariş Raporu (View)";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fa-solid fa-table text-info"></i> Sipariş Detay Raporu</h3>
+    <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="alert alert-info">
+    <i class="fa-solid fa-info-circle"></i> Bu liste <strong>SQL Server View</strong> kullanılarak çekilmiştir.
+</div>
+
+<table class="table table-hover bg-white shadow-sm">
+    <thead class="table-light">
+        <tr>
+            <th>Sipariş No</th>
+            <th>Ürün Adı</th>
+            <th>Tutar</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.SiparisId</td>
+                <td>@item.UrunAdi</td>
+                <td class="fw-bold text-success">@item.ToplamTutar TL</td>
+                <td>@item.Tarih</td>
+                <td><span class="badge bg-secondary">@item.Durum</span></td>
+            </tr>
+        }
+    </tbody>
+</table>

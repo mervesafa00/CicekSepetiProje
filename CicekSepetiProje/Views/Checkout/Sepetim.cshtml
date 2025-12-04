@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Sepetim";
+    Layout = "_Layout";
+
+    // Durumu kontrol et
+    string durum = ViewBag.SepetDurumu as string;
+
+    // Eğer doluysa verileri çek (Hata vermemesi için try-catch gibi kontrol)
+    var fiyat = TempData.Peek("Fiyat");
+    var tarih = TempData.Peek("Tarih");
+    var saat = TempData.Peek("Saat");
+    var urunIdObj = TempData.Peek("UrunId");
+    int urunId = urunIdObj != null ? Convert.ToInt32(urunIdObj) : 0;
+}
+
+@inject CicekSepetiProje.Models.CicekSepetiDbContext _context
+@{
+    var urun = _context.Urunlers.Find(urunId);
+}
+
+<div class="container mt-4 mb-5">
+    
+    @if (durum == "Bos")
+    {
+        /* --- SENARYO 1: SEPET BOŞ GÖRÜNÜMÜ --- */
+        <div class="text-center" style="margin-top: 100px; margin-bottom: 100px;">
+            <div class="mb-4">
+                <span style="background-color: #f4f6f9; padding: 30px; border-radius: 50%; display: inline-block;">
+                    <i class="fa-solid fa-basket-shopping" style="font-size: 4rem; color: #ccc;"></i>
+                </span>
+            </div>
+            <h3 class="fw-bold text-dark">Sepetinizde ürün bulunmamaktadır.</h3>
+            <p class="text-muted">Çiçek Sepeti'nin binlerce ürünü arasından sevdiklerinize en uygun hediyeyi bulabilirsiniz.</p>
+            
+            <a href="/Urunlers" class="btn btn-success fw-bold px-5 py-2 mt-3" style="background-color: #5dbe00; border: none; border-radius: 25px;">
+                Alışverişe Başla
+            </a>
+        </div>
+    }
+    else
+    {
+        /* --- SENARYO 2: SEPET DOLU (SİPARİŞ) GÖRÜNÜMÜ --- */
+        <div class="cart-title" style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-cart-shopping" style="color: #5dbe00;"></i> Sepetim (1 Ürün)
+        </div>
+
+        <form asp-action="Tamamla" method="post" id="odemeFormu">
+            <div class="row">
+                <div class="col-md-8">
+                    <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; display: flex; gap: 20px; position: relative;">
+                        <i class="fa-solid fa-xmark" style="position: absolute; right: 15px; top: 15px; color: #999; cursor: pointer;"></i>
+                        <img src="@urun?.ResimUrl" style="width: 120px; height: 120px; object-fit: cover; border-radius: 6px;">
+                        <div class="flex-grow-1">
+                            <h5 style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 10px;">@urun?.UrunAdi</h5>
+                            <div style="background-color: #f5f5f5; padding: 8px; border-radius: 4px; font-size: 0.9rem; color: #555; display: inline-block;">
+                                <i class="fa-regular fa-calendar"></i> <strong>Teslimat:</strong> @tarih, @saat
+                                <div class="text-success mt-1" style="font-size:0.8rem; font-weight:600;">
+                                    <i class="fa-solid fa-truck"></i> Ücretsiz Teslimat
+                                </div>
+                            </div>
+                            <div style="position: absolute; right: 20px; bottom: 20px; font-size: 1.2rem; font-weight: bold; color: #333;">@fiyat TL</div>
+                        </div>
+                    </div>
+                    
+                    <a href="/Urunlers" class="d-block mt-3 text-muted small text-decoration-none">
+                        <i class="fa-solid fa-chevron-left"></i> Alışverişe geri dön
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <button type="button" class="btn w-100 mb-3" style="background-color: #5dbe00; color: white; font-weight: bold; padding: 12px; border-radius: 6px;" data-bs-toggle="modal" data-bs-target="#onayModal">
+                        Siparişi Onayla ve Bitir
+                    </button>
+
+                    <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;">
+                        <h5 class="text-center mb-4" style="color:#666;">Sipariş Özeti</h5>
+                        <div class="d-flex justify-content-between mb-2" style="font-size: 0.9rem; color: #555;"><span>Ara Toplam</span><span>@fiyat TL</span></div>
+                        <div class="d-flex justify-content-between mb-3 text-success" style="font-size: 0.9rem;"><span>Kargo</span><span>Bedava</span></div>
+                        <hr>
+                        <div class="d-flex justify-content-between mt-3 font-weight-bold" style="font-size: 1.1rem; color: #333;"><span>Toplam:</span><span>@fiyat TL</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="hidden" name="KartNo" value="1234567812345678">
+            <input type="hidden" name="SonKullanma" value="12/25">
+            <input type="hidden" name="Cvv" value="123">
+        </form>
+    }
+</div>
+
+@if(durum != "Bos"){
+<div class="modal fade" id="onayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #5dbe00; color: white;">
+                <h5 class="modal-title"><i class="fa-solid fa-check-double"></i> Sipariş Onayı</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold">Siparişinizi tamamlamak üzeresiniz.</p>
+                <div class="alert alert-light border"><strong>Tutar:</strong> <span class="text-success fw-bold">@fiyat TL</span></div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sozlesmeOnay" onchange="butonAc()">
+                    <label class="form-check-label small" for="sozlesmeOnay">
+                        Mesafeli satış sözleşmesini okudum, onaylıyorum.
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-success disabled" id="finalButton" onclick="siparisiBitir()">Siparişi Tamamla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function butonAc() {
+        var chk = document.getElementById("sozlesmeOnay");
+        var btn = document.getElementById("finalButton");
+        if (chk.checked) btn.classList.remove("disabled");
+        else btn.classList.add("disabled");
+    }
+    function siparisiBitir() {
+        document.getElementById("odemeFormu").submit();
+    }
+</script>
+}

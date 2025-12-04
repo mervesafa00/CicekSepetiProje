@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giriş Yap - ÇiçekSepeti</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    
+    <style>
+        body { background-color: #fff; font-family: 'Segoe UI', sans-serif; }
+        .back-btn { position: absolute; top: 20px; left: 20px; text-decoration: none; color: #666; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .login-container { display: flex; justify-content: center; margin-top: 50px; }
+        .login-card { width: 100%; max-width: 400px; padding: 20px; }
+        .form-control { height: 45px; border-radius: 6px; }
+        
+        /* TAM ÇİÇEK SEPETİ YEŞİLİ */
+        .btn-cicek { 
+            background-color: #5dbe00; 
+            color: white; 
+            font-weight: bold; 
+            height: 45px; 
+            width: 100%; 
+            border-radius: 6px; 
+            border: none; 
+            font-size: 1rem; 
+            transition: 0.2s;
+        }
+        .btn-cicek:hover { background-color: #4ca300; }
+        
+        .btn-guest {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            height: 45px;
+            width: 100%;
+            border-radius: 6px;
+            border: none;
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
+        }
+        .btn-guest:hover { background-color: #000; color: white; }
+        .divider { display: flex; align-items: center; text-align: center; margin: 20px 0; color: #999; font-size: 0.85rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-btn"><i class="fa-solid fa-chevron-left"></i> Geri</a>
+    
+    <div class="text-center mt-4 mb-3">
+        <img src="~/img/logo.png" height="45" alt="ÇiçekSepeti">
+    </div>
+
+    <div class="container login-container">
+        <div class="login-card">
+            <h4 class="text-center fw-bold mb-4" style="color:#333;">Giriş Yap</h4>
+            
+            <form action="/Account/GuestCheckout" method="get">
+                <div class="mb-3"><input type="email" class="form-control" placeholder="E-Posta" required></div>
+                <div class="mb-3"><input type="password" class="form-control" placeholder="Şifre" required></div>
+                
+                <button type="submit" class="btn btn-cicek">Giriş Yap</button>
+            </form>
+
+            <div class="divider">VEYA</div>
+
+            <a asp-controller="Account" asp-action="GuestCheckout" class="btn-guest">
+                Üye Olmadan Devam Et <i class="fa-solid fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yönetim Paneli</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .admin-nav { background-color: #1e293b; padding: 15px 30px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .admin-brand { font-weight: bold; font-size: 1.4rem; color: #ffc107; text-decoration: none; margin-right: 40px; }
+        .admin-link { color: #94a3b8; margin-right: 25px; text-decoration: none; font-weight: 500; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .admin-link:hover, .admin-link.active { color: white; transform: translateY(-2px); }
+        .admin-link i { font-size: 1.1rem; }
+        .admin-container { background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; margin-top: 30px; margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+    <nav class="admin-nav d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <a href="/Admin" class="admin-brand"><i class="fa-solid fa-user-tie"></i> Firma Paneli</a>
+            
+            <a href="/Admin" class="admin-link"><i class="fa-solid fa-list-check"></i> Siparişler</a>
+            <a href="/Admin/UrunYonetimi" class="admin-link"><i class="fa-solid fa-leaf"></i> Ürün Yönetimi</a> <a href="/Raporlar" class="admin-link"><i class="fa-solid fa-chart-pie"></i> Raporlar</a>
+        </div>
+        <div>
+            <a href="/Urunlers" class="btn btn-sm btn-outline-light">Müşteri Sitesine Dön <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="admin-container">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

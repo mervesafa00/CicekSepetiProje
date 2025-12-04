@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Sipariş Onayı";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Üst menüdeki yeşilin AYNISI */
+    .cicek-yesili { color: #4caf50 !important; }
+    
+    /* Dolu Yeşil Buton */
+    .btn-cicek-fill {
+        background-color: #4caf50;
+        color: white !important;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: 2px solid #4caf50;
+        transition: 0.2s;
+    }
+    .btn-cicek-fill:hover { background-color: #43a047; border-color: #43a047; }
+
+    /* Çerçeveli Yeşil Buton */
+    .btn-cicek-outline {
+        background-color: white;
+        color: #4caf50 !important;
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: 2px solid #4caf50;
+        transition: 0.2s;
+    }
+    .btn-cicek-outline:hover { background-color: #f9fff9; }
+</style>
+
+<div class="container mt-5 text-center" style="min-height: 60vh;">
+    <div class="card p-5 border-0 shadow-sm mx-auto" style="max-width: 600px; border-radius: 15px;">
+        
+        <div class="mb-4">
+            <i class="fa-solid fa-circle-check cicek-yesili" style="font-size: 6rem;"></i>
+        </div>
+        
+        <h2 class="fw-bold cicek-yesili mb-3">Siparişiniz Alındı!</h2>
+        
+        <p class="text-muted mb-4" style="font-size: 1.1rem;">
+            Teşekkürler! Siparişiniz başarıyla oluşturuldu.<br>
+            Sipareşlerim bölümünden takibini yapabilirsiniz kurye adrese ulaştığında sizinle iletişme geçecektir.
+        </p>
+        
+        <div class="mt-4 d-flex justify-content-center gap-3">
+            <a asp-controller="Urunlers" asp-action="Index" class="btn-cicek-outline">
+                <i class="fa-solid fa-arrow-left"></i> Alışverişe Dön
+            </a>
+            
+            <a asp-controller="Siparislerim" asp-action="Index" class="btn-cicek-fill">
+                Sipariş Takibi <i class="fa-solid fa-box-open ms-1"></i>
+            </a>
+        </div>
+
+    </div>
+</div>

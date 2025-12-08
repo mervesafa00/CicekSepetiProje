@@ -29,7 +29,7 @@ ADIM 1: VERİTABANI KURULUMU (SQL SERVER)
 
 ADIM 2: PROJENİN BAŞLATILMASI (VISUAL STUDIO)
 
-   1. "CicekSepetiProje" klasöründeki "CicekSepetiProje.sln" dosyasına çift tıklayarak projeyi Visual Studio 2022'de açınız.
+   1. "VeriTabanıCicekSepetiProje" klasör içerisindeki "CicekSepetiProje" klasöründeki "CicekSepetiProje.sln" dosyasına çift tıklayarak projeyi Visual Studio 2022'de açınız.
 
 
    2. (Opsiyonel) Eğer veritabanı bağlantı hatası alırsanız; "appsettings.json" dosyasını açarak "Server=..." kısmını kendi bilgisayarınızın sunucu adıyla değiştiriniz.
